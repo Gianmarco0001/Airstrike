@@ -4,14 +4,14 @@ I created this to imitate the Apple's AirDrop but in a simpler and open source w
 
 ---
 
-## ✨ Features
+##  Features
 - Multiple file upload via web interface  
 - Upload progress bar  
 - Console QR Code with LAN address  
 - Button to shut down the server from the browser  
 - Uploaded files saved locally in the `uploads/` folder  
 
-## 🚀 Installation
+##  Installation
 
 1. Clone the repository:
    ```bash
@@ -26,7 +26,7 @@ I created this to imitate the Apple's AirDrop but in a simpler and open source w
 
 ---
 
-## 📦 Usage
+##  Usage
 
 1. Start the server:
    ```bash
@@ -41,11 +41,11 @@ I created this to imitate the Apple's AirDrop but in a simpler and open source w
    - Track the upload progress.  
    - Click **"Chiudi connessione"** to shut down the server when done.
 
-📂 Files are saved in the `uploads/` directory by default.
+ Files are saved in the `uploads/` directory by default.
 
 ---
 
-## ⚠️ Disclaimer
+## ⚠ Disclaimer
 
 Airstrike is a simple experimental project created **to imitate the behavior of AirDrop for educational purposes**.  
 It is **not intended for production use** and does not include advanced security features.  
@@ -53,6 +53,6 @@ Use it only in trusted local networks.
 
 ---
 
-## 📄 License
+##  License
 
 This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
