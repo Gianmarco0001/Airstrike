@@ -66,3 +66,5 @@ Usalo solo in reti locali fidate.
 This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.  
 Questo progetto è rilasciato sotto la **MIT License** – vedi il file [LICENSE](LICENSE) per i dettagli.
 
+![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/python-3.9%2B-blue)
