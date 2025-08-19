@@ -19,7 +19,7 @@ I created this to imitate Apple's AirDrop in a simpler and open source way.
 
 1. Clone the repository / Clona il repository:
    ```bash
-   git clone https://github.com/<your-username>/airstrike.git
+   git clone https://github.com/Gianmarco0001/Airstrike.git
    cd airstrike
    ```
 
