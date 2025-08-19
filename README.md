@@ -18,6 +18,6 @@ I created this to imitate the Apple's AirDrop but in a simpler and open source w
 Clone the repository and install the requirements:
 
 ```bash
-git clone it
+git clone https://github.com/Gianmarco0001/Airstrike.git
 cd airstrike
 pip install -r requirements.txt
