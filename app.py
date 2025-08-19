@@ -1,0 +1,67 @@
+from fastapi import FastAPI, Request, UploadFile, File
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+import os
+import uvicorn
+import socket
+import qrcode
+
+APP_NAME = "Airstrike"
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+app = FastAPI(title=APP_NAME)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
+# Ottieni IP locale della LAN
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = "127.0.0.1"
+    finally:
+        s.close()
+    return ip
+
+# Stampa QR code direttamente nel terminale
+def print_qr(url):
+    qr = qrcode.QRCode(border=1)
+    qr.add_data(url)
+    qr.make(fit=True)
+    qr.print_ascii(invert=True)
+    print(f"\nServer URL: {url}\n")
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    local_ip = get_local_ip()
+    server_url = f"http://{local_ip}:5000"
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "server_url": server_url,
+        "app_name": APP_NAME
+    })
+
+@app.post("/upload")
+async def upload(files: list[UploadFile] = File(...)):
+    saved_files = []
+    total = len(files)
+    for idx, file in enumerate(files, start=1):
+        file_location = os.path.join(UPLOAD_FOLDER, file.filename)
+        with open(file_location, "wb") as f:
+            f.write(await file.read())
+        saved_files.append(file.filename)
+        # barra di avanzamento in console
+        progress = int((idx/total)*100)
+        bar = "#" * (progress // 2)
+        print(f"Caricamento: [{bar:<50}] {progress}%")
+    return {"filenames": saved_files, "status": "success"}
+
+if __name__ == "__main__":
+    local_ip = get_local_ip()
+    server_url = f"http://{local_ip}:5000"
+    print_qr(server_url)
+    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=False, log_level="info")

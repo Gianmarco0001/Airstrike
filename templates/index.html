@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{ app_name }}</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>{{ app_name }}</h1>
+    <p>Server URL: <a href="{{ server_url }}">{{ server_url }}</a></p>
+
+    <form id="uploadForm">
+        <input type="file" name="files" id="fileInput" multiple>
+        <button type="submit">Upload</button>
+    </form>
+
+    <div id="progressContainer" style="margin-top:10px; width: 100%; background: #eee; display:none;">
+        <div id="progressBar" style="width:0%; height:20px; background: #4caf50;"></div>
+    </div>
+
+    <button id="shutdownBtn" class="shutdown">Chiudi connessione</button>
+    <div id="status"></div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
