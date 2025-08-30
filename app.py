@@ -8,12 +8,23 @@ import socket
 import qrcode
 
 APP_NAME = "Airstrike"
-UPLOAD_FOLDER = "uploads"
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
+STATIC_FOLDER = os.path.join(BASE_DIR, "static")
+TEMPLATES_FOLDER = os.path.join(BASE_DIR, "templates")
+
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = FastAPI(title=APP_NAME)
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+
+
+app.mount("/static", StaticFiles(directory=STATIC_FOLDER), name="static")
+templates = Jinja2Templates(directory=TEMPLATES_FOLDER)
 
 # Ottieni IP locale della LAN
 def get_local_ip():
@@ -49,19 +60,36 @@ async def index(request: Request):
 async def upload(files: list[UploadFile] = File(...)):
     saved_files = []
     total = len(files)
+
     for idx, file in enumerate(files, start=1):
         file_location = os.path.join(UPLOAD_FOLDER, file.filename)
+
         with open(file_location, "wb") as f:
-            f.write(await file.read())
+            while True:
+                chunk = await file.read(1024 * 1024)  # 1MB alla volta
+                if not chunk:
+                    break
+                f.write(chunk)
+
         saved_files.append(file.filename)
+
         # barra di avanzamento in console
-        progress = int((idx/total)*100)
+        progress = int((idx / total) * 100)
         bar = "#" * (progress // 2)
         print(f"Caricamento: [{bar:<50}] {progress}%")
+
     return {"filenames": saved_files, "status": "success"}
+
 
 if __name__ == "__main__":
     local_ip = get_local_ip()
     server_url = f"http://{local_ip}:5000"
     print_qr(server_url)
-    uvicorn.run("app:app", host="0.0.0.0", port=5000, reload=False, log_level="info")
+    print(">>> Avvio uvicorn...")
+    uvicorn.run("app:app", host="0.0.0.0", port=5000, log_level="debug")  
+
+
+
+
+
+
