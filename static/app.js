@@ -12,35 +12,50 @@ form.addEventListener("submit", async (e) => {
         return;
     }
 
-    const formData = new FormData();
-    for (let file of files) {
+    progressContainer.style.display = "block";
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const formData = new FormData();
         formData.append("files", file);
+
+        progressBar.style.width = "0%";
+        progressBar.innerText = "0%";
+        statusDiv.innerText = `Caricamento ${i+1} di ${files.length}: ${file.name}`;
+
+        try {
+            await new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open("POST", "/upload", true);
+
+                xhr.upload.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = Math.round((e.loaded / e.total) * 100);
+                        progressBar.style.width = percentComplete + "%";
+                        progressBar.innerText = percentComplete + "%";
+                    }
+                };
+
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        resolve();
+                    } else {
+                        reject(`Errore su ${file.name}`);
+                    }
+                };
+
+                xhr.onerror = () => reject(`Errore su ${file.name}`);
+                xhr.send(formData);
+            });
+        } catch (err) {
+            statusDiv.innerText = err;
+            break;
+        }
     }
 
-    progressContainer.style.display = "block";
-    progressBar.style.width = "0%";
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "/upload", true);
-
-    xhr.upload.onprogress = function(e) {
-        if (e.lengthComputable) {
-            const percentComplete = (e.loaded / e.total) * 100;
-            progressBar.style.width = percentComplete + "%";
-        }
-    };
-
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            const result = JSON.parse(xhr.responseText);
-            statusDiv.innerHTML = `File caricati: ${result.filenames.join(", ")}`;
-            progressBar.style.width = "100%";
-        } else {
-            statusDiv.innerHTML = "Errore durante l'upload!";
-        }
-    };
-
-    xhr.send(formData);
+    statusDiv.innerText = "Tutti i file caricati!";
+    progressBar.style.width = "100%";
+    progressBar.innerText = "100%";
 });
 
 // Bottone per chiudere il server
