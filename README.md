@@ -47,6 +47,7 @@ I created this to imitate Apple's AirDrop in a simpler and open source way.
    - Track the upload progress / Segui la barra di avanzamento del caricamento.  
    - Click **"Chiudi connessione"** to shut down the server when done / Clicca su **"Chiudi connessione"** per spegnere il server quando hai finito.  
    - Download files uploaded from PC directly to your iPhone / Scarica i file caricati dal PC direttamente sul tuo iPhone.
+   - **PC → iPhone example:** To transfer files to your phone, open the URL on your PC, upload the files via the web interface, then open the QR code on your mobile. Under "File available on the server", you will see the previously uploaded files ready to be downloaded to your phone. / Per trasferire i file al tuo cellulare, apri l'URL sul pc, manda in upload i file che ti servono e infine scannerizza il QR dal cellulare. Troverai sotto "file disponibili sul server" i file caricati precedentemente dal pc pronti per essere salvati sul tuo dispositivo.
 
 Files are saved in the `uploads/` directory by default / I file verranno salvati di default nella cartella `uploads/`.
 
