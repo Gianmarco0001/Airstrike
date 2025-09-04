@@ -54,3 +54,22 @@ button.shutdown:hover {
     margin-top: 1rem;
     font-weight: bold;
 }
+
+#fileList ul {
+    list-style: none;
+    padding: 0;
+}
+
+#fileList li {
+    margin: 0.5rem 0;
+}
+
+#fileList a {
+    color: #0077cc;
+    text-decoration: none;
+}
+
+#fileList a:hover {
+    text-decoration: underline;
+}
+

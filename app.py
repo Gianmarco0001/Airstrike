@@ -1,32 +1,28 @@
-from fastapi import FastAPI, Request, UploadFile, File
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request, UploadFile, File, BackgroundTasks
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import os
 import uvicorn
 import socket
 import qrcode
+import time
 
 APP_NAME = "Airstrike"
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
 
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 STATIC_FOLDER = os.path.join(BASE_DIR, "static")
 TEMPLATES_FOLDER = os.path.join(BASE_DIR, "templates")
 
-
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app = FastAPI(title=APP_NAME)
 
-
 app.mount("/static", StaticFiles(directory=STATIC_FOLDER), name="static")
 templates = Jinja2Templates(directory=TEMPLATES_FOLDER)
 
-# Ottieni IP locale della LAN
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
@@ -38,7 +34,6 @@ def get_local_ip():
         s.close()
     return ip
 
-# Stampa QR code direttamente nel terminale
 def print_qr(url):
     qr = qrcode.QRCode(border=1)
     qr.add_data(url)
@@ -56,10 +51,12 @@ async def index(request: Request):
         "app_name": APP_NAME
     })
 
+# Upload dei file
 @app.post("/upload")
 async def upload(files: list[UploadFile] = File(...)):
     saved_files = []
     total = len(files)
+    start_time = time.time()
 
     for idx, file in enumerate(files, start=1):
         file_location = os.path.join(UPLOAD_FOLDER, file.filename)
@@ -73,23 +70,40 @@ async def upload(files: list[UploadFile] = File(...)):
 
         saved_files.append(file.filename)
 
-        # barra di avanzamento in console
         progress = int((idx / total) * 100)
         bar = "#" * (progress // 2)
-        print(f"Caricamento: [{bar:<50}] {progress}%")
+
+        elapsed = time.time() - start_time
+        avg_time_per_file = elapsed / idx
+        remaining_files = total - idx
+        remaining_time = int(avg_time_per_file * remaining_files)
+
+        print(f"Caricamento: [{bar:<50}] {progress}% | File {idx}/{total} | Tempo stimato rimanente: {remaining_time}s", flush=True)
 
     return {"filenames": saved_files, "status": "success"}
 
+@app.get("/files")
+async def list_files():
+    files = os.listdir(UPLOAD_FOLDER)
+    return JSONResponse(content={"files": files})
+
+@app.get("/download/{filename}")
+async def download_file(filename: str):
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
+    if os.path.exists(file_path):
+        return FileResponse(path=file_path, filename=filename, media_type="application/octet-stream")
+    return {"error": "File non trovato"}
+
+@app.post("/shutdown")
+async def shutdown(background_tasks: BackgroundTasks):
+    def stop():
+        os._exit(0)  # forza chiusura del processo uvicorn
+    background_tasks.add_task(stop)
+    return {"status": "Server in chiusura..."}
 
 if __name__ == "__main__":
     local_ip = get_local_ip()
     server_url = f"http://{local_ip}:5000"
     print_qr(server_url)
     print(">>> Avvio uvicorn...")
-    uvicorn.run("app:app", host="0.0.0.0", port=5000, log_level="debug")  
-
-
-
-
-
-
+    uvicorn.run("app:app", host="0.0.0.0", port=5000, log_level="debug")

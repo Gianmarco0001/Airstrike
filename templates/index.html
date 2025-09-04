@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
 <meta charset="UTF-8">
 <title>{{ app_name }}</title>
@@ -10,15 +10,22 @@
     <h1>{{ app_name }}</h1>
     <p>Server URL: <a href="{{ server_url }}">{{ server_url }}</a></p>
 
+    <!-- Upload -->
     <form id="uploadForm">
         <input type="file" name="files" id="fileInput" multiple>
         <button type="submit">Upload</button>
     </form>
 
+    <!-- Barra di progresso -->
     <div id="progressContainer" style="margin-top:10px; width: 100%; background: #eee; display:none;">
-        <div id="progressBar" style="width:0%; height:20px; background: #4caf50;"></div>
+        <div id="progressBar" style="width:0%; height:20px; background: #4caf50; text-align:center; color:white;">0%</div>
     </div>
 
+    <!-- Lista file scaricabili -->
+    <h2 style="margin-top:20px;">File disponibili sul server</h2>
+    <div id="fileList"><p>Caricamento in corso...</p></div>
+
+    <!-- Shutdown -->
     <button id="shutdownBtn" class="shutdown">Chiudi connessione</button>
     <div id="status"></div>
 </div>

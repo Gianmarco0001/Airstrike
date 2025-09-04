@@ -1,7 +1,8 @@
 # Airstrike
 
 Airstrike is a lightweight FastAPI application that allows you to upload files to your machine via a web interface.  
-I created this to imitate Apple's AirDrop in a simpler and open source way.
+I created this to imitate Apple's AirDrop in a simpler and open source way.  
+**New:** You can now upload files from your PC and download them on your iPhone (two-way transfer).
 
 ---
 
@@ -12,6 +13,7 @@ I created this to imitate Apple's AirDrop in a simpler and open source way.
 - Console QR Code with LAN address  
 - Button to shut down the server from the browser  
 - Uploaded files saved locally in the `uploads/` folder  
+- **PC → iPhone file transfer**: upload files on your PC and download them directly from your phone  
 
 ---
 
@@ -20,7 +22,7 @@ I created this to imitate Apple's AirDrop in a simpler and open source way.
 1. Clone the repository / Clona il repository:
    ```bash
    git clone https://github.com/Gianmarco0001/Airstrike.git
-   cd airstrike
+   cd Airstrike
    ```
 
 2. Install dependencies / Installa le dipendenze:
@@ -41,9 +43,10 @@ I created this to imitate Apple's AirDrop in a simpler and open source way.
    Scan it with your phone or another device connected to the same Wi-Fi network / Scansiona il codice con il tuo telefono o un altro dispositivo connesso alla stessa rete Wi-Fi.
 
 3. Open the provided URL in the browser / Apri l'URL fornito nel browser:  
-   - Upload files through the web interface / Carica file tramite l'interfaccia web.  
+   - Upload files from your iPhone or PC through the web interface / Carica file dal tuo iPhone o PC tramite l'interfaccia web.  
    - Track the upload progress / Segui la barra di avanzamento del caricamento.  
-   - Click **"Chiudi connessione"** to shut down the server when done / Clicca su **"Chiudi connessione"** per spegnere il server quando hai finito.
+   - Click **"Chiudi connessione"** to shut down the server when done / Clicca su **"Chiudi connessione"** per spegnere il server quando hai finito.  
+   - Download files uploaded from PC directly to your iPhone / Scarica i file caricati dal PC direttamente sul tuo iPhone.
 
 Files are saved in the `uploads/` directory by default / I file verranno salvati di default nella cartella `uploads/`.
 
